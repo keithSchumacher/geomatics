@@ -1,8 +1,11 @@
 package com.udacity.jwdnd.course1.cloudstorage.services;
 
-import com.udacity.jwdnd.course1.cloudstorage.mapper.ModuleMapper;
+import com.udacity.jwdnd.course1.cloudstorage.mapper.ResultMapper;
+import com.udacity.jwdnd.course1.cloudstorage.mapper.ResultMapper;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
-import com.udacity.jwdnd.course1.cloudstorage.model.ModuleOutput;
+import com.udacity.jwdnd.course1.cloudstorage.model.Result;
+import com.udacity.jwdnd.course1.cloudstorage.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,14 +13,11 @@ import java.io.IOException;
 import java.util.List;
 
 @Service
-public class ModuleOutputService {
-    private final ModuleMapper moduleMapper;
-    private final UserMapper userMapper;
-
-    public ModuleOutputService(ModuleMapper moduleMapper, UserMapper userMapper) {
-        this.moduleMapper = moduleMapper;
-        this.userMapper = userMapper;
-    }
+public class ResultService {
+    @Autowired
+    ResultMapper resultMapper;
+    @Autowired
+    UserMapper userMapper;
 
 //    public String isFileValid(MultipartFile webfile, String username) {
 //        for (File file : fileMapper.getFiles(userMapper.getUser(username).getUserid())) {
@@ -41,12 +41,11 @@ public class ModuleOutputService {
 //        return fileMapper.insert(file);
 //    }
 
-    public List<ModuleOutput> getModuleOutputs() {
-        System.out.println(moduleMapper.getModuleOutputs());
-        return moduleMapper.getModuleOutputs();
+    public List<Result> getResults() {
+        return resultMapper.getResults();
     }
 
-    public ModuleOutput getModuleOutput(Integer moduleId) { return moduleMapper.getModuleOutput(moduleId); }
+    public Result getResult(Integer resultId) { return resultMapper.getModuleOutput(resultId); }
 
 //    public void deleteFile(Integer fileId) {fileMapper.deleteFile(fileId);}
 }

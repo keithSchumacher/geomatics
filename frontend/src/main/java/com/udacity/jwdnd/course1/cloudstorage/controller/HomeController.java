@@ -1,8 +1,11 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
-import com.udacity.jwdnd.course1.cloudstorage.model.ModuleOutput;
-import com.udacity.jwdnd.course1.cloudstorage.services.ModuleOutputService;
+import com.udacity.jwdnd.course1.cloudstorage.model.Result;
+import com.udacity.jwdnd.course1.cloudstorage.model.User;
+import com.udacity.jwdnd.course1.cloudstorage.services.ModuleService;
+import com.udacity.jwdnd.course1.cloudstorage.services.ResultService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,38 +17,37 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 
 @Controller
 @RequestMapping("/")
 public class HomeController {
-    private ModuleOutputService moduleOutputService;
-    private UserService userService;
-
-    public HomeController(ModuleOutputService moduleOutputService, UserService userService) {
-        this.userService = userService;
-        this.moduleOutputService = moduleOutputService;
-    }
+    @Autowired
+    ResultService resultService;
+    @Autowired
+    ModuleService moduleService;
+    @Autowired
+    UserService userService;
 
     @GetMapping("/home")
     public String getHomePage(Authentication authentication, Model model) {
-        model.addAttribute("moduleOutputs",
-                this.moduleOutputService.getModuleOutputs());
+        model.addAttribute("results",
+                resultService.getResults());
+        model.addAttribute("modules",
+                moduleService.getModules());
         return "home";
     }
 
     @GetMapping("/download")
     public ResponseEntity<InputStreamResource> downloadFile(Authentication authentication, RedirectAttributes redirectAttributes,
-                                                            String moduleId,
+                                                            String resultId,
                                                             HttpServletResponse response) throws IOException {
-            ModuleOutput moduleOutput = this.moduleOutputService.getModuleOutput(Integer.valueOf(moduleId));
+            Result result = resultService.getResult(Integer.valueOf(resultId));
             redirectAttributes.addFlashAttribute("success", "File was downloaded.");
             return ResponseEntity.ok()
                     .header("Content-Disposition", "attachment; filename=" + "output.txt")
-//                    .contentLength(file.getFilesize())
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                    .body(new InputStreamResource(new ByteArrayInputStream(moduleOutput.getOutput())));
+                    .body(new InputStreamResource(new ByteArrayInputStream(result.getOutput())));
         }
 
 //        @GetMapping("/delete_file")

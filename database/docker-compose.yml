@@ -1,20 +1,18 @@
 version: '3.6'
 
 services:
-        module_database:
+        geomatics_database:
                 image: mysql/mysql-server
-                container_name: module-database
+                container_name: geomatics-database
                 networks:
                         - internal-network
                 environment:
-                        MYSQL_DATABASE: module_database
+                        MYSQL_DATABASE: geomatics_database
                         MYSQL_ROOT_PASSWORD: password
-                        # MYSQL_USER: test
-                        # MYSQL_PASSWORD: password
                         MYSQL_ROOT_HOST: '%'
                 volumes:
-                        - /home/kschuma/projects/geomatics/database_container/init:/docker-entrypoint-initdb.d/:ro
-                        - /home/kschuma/projects/geomatics/database_container/my.cnf:/etc/my.cnf
+                        - /home/kschuma/projects/geomatics/database/init:/docker-entrypoint-initdb.d/:ro
+                        - /home/kschuma/projects/geomatics/database/my.cnf:/etc/my.cnf
 networks:
         internal-network:
                 name: geomatics
