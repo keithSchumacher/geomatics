@@ -38,6 +38,11 @@ public class HomeController {
         return "home";
     }
 
+    @GetMapping(path = {"*", "home/*" })
+    public String defaultHome(){
+        return "redirect:/home";
+    }
+
     @GetMapping("/download")
     public ResponseEntity<InputStreamResource> downloadFile(Authentication authentication, RedirectAttributes redirectAttributes,
                                                             String resultId,
@@ -50,14 +55,44 @@ public class HomeController {
                     .body(new InputStreamResource(new ByteArrayInputStream(result.getOutput())));
         }
 
+    @PostMapping(path = "/create_module")
+    public String createModule(Authentication authentication,
+                             @RequestParam(name="moduleId", required=false) Integer moduleId,
+                             @RequestParam("moduleName") String moduleName,
+                             @RequestParam("gitURL") String gitURL,
+                             RedirectAttributes redirectAttributes) {
+        int rowsAdded = -1;
+        if (moduleId == null) {
+            rowsAdded = moduleService.createModule(moduleName, gitURL,
+                    userService.getUserId(authentication.getName()));
+            redirectAttributes.addFlashAttribute("note_success", "Note was created.");
+        }
+//        else {
+//            rowsAdded = moduleService.updateNote(noteid, moduleName, gitURL);
+//            redirectAttributes.addFlashAttribute("note_success", "Note was updated.");
+//        }
+        if (rowsAdded < 0) {
+            System.out.println("there was an error inserting the note");
+        }  else {
+            redirectAttributes.addFlashAttribute("notes",
+                    moduleService.getModules());
+//                            this.userService.getUserId(authentication.getName())));
+            redirectAttributes.addFlashAttribute("tab", "note");
+        }
+        return "redirect:/home";
+    }
+
+
+
+
 //        @GetMapping("/delete_file")
 //        public String deleteFile(Authentication authentication, String fileId, RedirectAttributes redirectAttributes) {
 //        this.fileService.deleteFile(Integer.valueOf(fileId));
 //        redirectAttributes.addFlashAttribute("file_success", "File was deleted.");
 //        redirectAttributes.addFlashAttribute("tab", "file");
 //            return "redirect:/home";
-//        }
 
+//        }
 
 
 
@@ -79,11 +114,7 @@ public class HomeController {
 //        }
 //        if (uploadError != null) {redirectAttributes.addFlashAttribute("uploadError", uploadError);}
 //            return "redirect:/home";
-//        }
 
-    @GetMapping(path = {"*", "home/*" })
-    public String defaultHome(){
-        return "redirect:/home";
-    }
+//        }
 }
 

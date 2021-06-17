@@ -26,5 +26,13 @@ public class ModuleService {
         return moduleMapper.getModule(moduleId);
     }
 
+    public int createModule(String moduleName, String gitURL, Integer userid) {
+        GeoModule module = new GeoModule();
+        module.setModuleName(moduleName);
+        module.setGitURL(gitURL);
+        module.setUserid(userid);
+        return moduleMapper.insert(module);
+    }
+
 //    public void deleteFile(Integer fileId) {fileMapper.deleteFile(fileId);}
 }

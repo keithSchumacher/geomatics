@@ -11,8 +11,8 @@ services:
                         MYSQL_ROOT_PASSWORD: password
                         MYSQL_ROOT_HOST: '%'
                 volumes:
-                        - /home/kschuma/projects/geomatics/database/init:/docker-entrypoint-initdb.d/:ro
-                        - /home/kschuma/projects/geomatics/database/my.cnf:/etc/my.cnf
+                        - ./init:/docker-entrypoint-initdb.d/:ro
+#                        - /home/kschuma/projects/geomatics/database/init:/docker-entrypoint-initdb.d/:ro
 networks:
         internal-network:
                 name: geomatics
